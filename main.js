@@ -22,29 +22,6 @@ scene.add(cube);
 
 camera.position.z = 5;
 
-//skybox / cubemap background
-//https://jaxry.github.io/panorama-to-cubemap/ 
-
-const cubeGeometry = new THREE.BoxGeometry(400,400,400); //x y z 	new Box geometry
-const cubeMeshBasicMaterials = [ // new MeshBasicMaterial(s) used for new Box geometry
-
-	// https://threejs.org/docs/#api/en/materials/Material 		class Materials
-	// https://threejs.org/docs/#api/en/textures/Texture 	interface Texture
-	// https://threejs.org/docs/#api/en/materials/MeshBasicMaterial 	class MeshBasicMaterial extends Materials implements Texture
-	
-	// https://threejs.org/docs/#api/en/loaders/TextureLoader
-
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/front.png'), side: THREE.DoubleSide}),
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/back.png'), side: THREE.DoubleSide}),
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/top.png'), side: THREE.DoubleSide}),
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/bottom.png'), side: THREE.DoubleSide}),
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/left.png'), side: THREE.DoubleSide}),
-	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load('/img/back.png'), side: THREE.DoubleSide})
-];
-
-const cubeMaterial = new THREE.Mesh(cubeGeometry, cubeMeshBasicMaterials); //apply MeshBasicMaterial(s) to Geometry
-scene.add(cubeMaterial)
-
 
 function animate() {
 	requestAnimationFrame(animate); 
