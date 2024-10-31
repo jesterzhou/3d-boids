@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; //used for camera movement in 3d space.
 import { fragmentShader, vertexShader } from "./glsl.js"
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -11,12 +11,6 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let loader = new THREE.TextureLoader();
-loader.setPath('./src');
-
-let ctloader = new THREE.CubeTextureLoader();
-ctloader.setPath('./src');
-
 //bg https://threejs.org/docs/index.html?q=cube#api/en/textures/CubeTexture
 /*
 	right, left
@@ -24,76 +18,28 @@ ctloader.setPath('./src');
 	front, rear
 */
 
-//used for skybox (cube) https://jaxry.github.io/panorama-to-cubemap/
-const skybox_textures = ctloader.load([
-	'/px-right.png', //right
-	'/nx-left.png', //left
 
-	'/py-top.png', //top 
-	'/ny-bottom.png', //bottom
+const aquarium_geometry = new THREE.BoxGeometry(16384,4096,16384);
+const aquarium_mesh = new THREE.Mesh(aquarium_geometry, aquarium_mat);
 
-	'/pz-front.png', //front 
-	'/nz-back.png', //rear
-]);
+scene.add(aquarium_mesh);
 
-console.log(ctloader.load('/nx-left.png'));
-
-const floor = loader.load('/floor.jpg');
-const underwater = loader.load('/underwater.jpg');
-const surface = loader.load('/surface.jpg');
-
-//https://threejs.org/examples/webgl_water.html
-//scene
-//mesh contains, geometry (shape) and material (texture)
-
-const aquarium_mat = new THREE.ShaderMaterial({
-
-	// we require custom shader due to ShaderLib not having rectangular prism
-	// vertexShader: shader.vertexShader,
-	// fragmentShader: shader.fragmentShader,
-	// uniforms: shader.uniforms, 
-	
-	vertexShader,	
-	fragmentShader,
-
-	uniforms: {
-		//apply textured cube shaders to meshes
-		tfloor: {value: floor},
-		tunderwater: {value: underwater},
-		tsurface: {value: surface},
-	},
-
-	transparent: true,
-	opacity: 0.80,
-	depthWrite: false, //set as false, allows for layering of opposing mesh ie. looking through front, rear will render. and not vanish
-	side: THREE.DoubleSide	
-
-});
-
-// const sphere_mat = new THREE.MeshBasicMaterial({
-	// map: loader.load('/src/background.jpg');
-// 	side: THREE.DoubleSide,
-// })
-
-//sphere geometry
-// const sphere_geometry = new THREE.SphereGeometry(20480,8,8);
-// const sphere = new THREE.Mesh(sphere_geometry, sphere_mat)
-
-const aquarium_geometry = new THREE.BoxGeometry(2048,1024,1024);
-const aquarium = new THREE.Mesh(aquarium_geometry, aquarium_mat);
-
-// scene.add(sphere);
-scene.add(aquarium);
 
 //skybox
+
 scene.background = skybox_textures;
+// scene.background = new THREE.Color(0xFFFFFFFF);
 
 
 //lighting
 
 
-camera.position.z = 2400;
+// aquarium.position.copy(light.position)
 
+
+
+
+camera.position.z = 2400;
 
 function animate() {
 	requestAnimationFrame(animate); 
